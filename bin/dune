@@ -1,0 +1,4 @@
+(executable
+ (public_name genuml)
+ (name main)
+ (libraries genuml))
