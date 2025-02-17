@@ -40,8 +40,7 @@ func led(kind lexer.TokenKind, bp binding_power, led_fn led_handler) {
 	led_lu[kind] = led_fn
 }
 
-func nud(kind lexer.TokenKind, bp binding_power, nud_fn nud_handler) {
-	bp_lu[kind] = primary
+func nud(kind lexer.TokenKind, nud_fn nud_handler) {
 	nud_lu[kind] = nud_fn
 }
 
@@ -73,9 +72,9 @@ func createTokenLookups() {
 	led(lexer.PERCENT, multiplicative, parse_binary_expr)
 
 	// Literals & Symbols
-	nud(lexer.NUMBER, primary, parse_primary_expr)
-	nud(lexer.STRING, primary, parse_primary_expr)
-	nud(lexer.IDENTIFIER, primary, parse_primary_expr)
+	nud(lexer.NUMBER, parse_primary_expr)
+	nud(lexer.STRING, parse_primary_expr)
+	nud(lexer.IDENTIFIER, parse_primary_expr)
 
 	// Statements
 	stmt(lexer.CONST, parse_var_decl_stmt)
