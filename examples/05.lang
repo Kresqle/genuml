@@ -9,9 +9,11 @@ struct Rectangle {
 }
 
 // Struct instantiation
-// const r1 = Rect{
-//    width: 10.2,
-//     height: 45.2 + 10
-// };
+const square = Rect{
+    width: Foo{
+        bar: "test"
+    },
+    height: 10
+};
 
 // const numbers[] = {1, 2, 3, 4};

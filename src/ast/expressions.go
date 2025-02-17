@@ -50,3 +50,10 @@ type AssignmentExpression struct {
 }
 
 func (n AssignmentExpression) expr() {}
+
+type StructInstantiation struct {
+	StructName string
+	Properties map[string]Expression
+}
+
+func (n StructInstantiation) expr() {}

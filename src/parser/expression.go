@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/Kresqle/genuml/src/ast"
+	"github.com/Kresqle/genuml/src/helpers"
 	"github.com/Kresqle/genuml/src/lexer"
 )
 
@@ -87,5 +88,31 @@ func parse_assignment_expr(p *parser, left ast.Expression, bp binding_power) ast
 		Operator: operatorToken,
 		Value:    rhs,
 		Assigne:  left,
+	}
+}
+
+func parse_struct_instantiation_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
+	var structName = helpers.ExpectType[ast.SymbolExpression](left).Value
+	var properties = map[string]ast.Expression{}
+
+	p.expect(lexer.OPEN_CURLY)
+
+	for p.hasTokens() && p.currentTokenKind() != lexer.CLOSE_CURLY {
+		propertyName := p.expect(lexer.IDENTIFIER).Value
+		p.expect(lexer.COLON)
+		expr := parse_expr(p, logical)
+
+		properties[propertyName] = expr
+
+		if p.currentTokenKind() != lexer.CLOSE_CURLY {
+			p.expect(lexer.COMMA)
+		}
+	}
+
+	p.expect(lexer.CLOSE_CURLY)
+
+	return ast.StructInstantiation{
+		StructName: structName,
+		Properties: properties,
 	}
 }
