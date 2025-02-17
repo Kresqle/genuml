@@ -1,4 +1,17 @@
-let bar = foo * 10 + (45 / 10 - -5);
-const foo: number = 10;
-bar = "Hello world";
 let baz : number[][];
+
+// Struct declaration
+struct Rectangle {
+    width: number;
+    static height: number;
+
+    // fn methodName() {}
+}
+
+// Struct instantiation
+// const r1 = Rect{
+//    width: 10.2,
+//     height: 45.2 + 10
+// };
+
+// const numbers[] = {1, 2, 3, 4};

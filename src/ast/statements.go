@@ -20,3 +20,21 @@ type VariableDeclarationStatement struct {
 }
 
 func (n VariableDeclarationStatement) stmt() {}
+
+type StructProperty struct {
+	IsStatic bool // determine whether the property is static
+	Type     Type
+}
+
+type StructMethod struct {
+	IsStatic bool // determine whether the property is static
+	Type     Type
+}
+
+type StructDeclarationStatement struct {
+	StructName string
+	Properties map[string]StructProperty
+	Methods    map[string]StructMethod
+}
+
+func (n StructDeclarationStatement) stmt() {}
