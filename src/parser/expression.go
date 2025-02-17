@@ -72,6 +72,13 @@ func parse_prefix_expr(p *parser) ast.Expression {
 	}
 }
 
+func parse_grouping_expr(p *parser) ast.Expression {
+	p.advance() // advance past grouping start
+	expr := parse_expr(p, default_bp)
+	p.expect(lexer.CLOSE_PAREN) // advance past close
+	return expr
+}
+
 func parse_assignment_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
 	operatorToken := p.advance()
 	rhs := parse_expr(p, bp)
