@@ -7,3 +7,7 @@ type Statement interface {
 type Expression interface {
 	expr()
 }
+
+type Type interface {
+	_type()
+}

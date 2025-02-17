@@ -16,7 +16,7 @@ type VariableDeclarationStatement struct {
 	VariableName  string
 	IsConstant    bool
 	AssignedValue Expression
-	// ExplicitType Type
+	ExplicitType  Type
 }
 
 func (n VariableDeclarationStatement) stmt() {}
