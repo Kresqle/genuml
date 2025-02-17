@@ -4,13 +4,13 @@ import (
 	"os"
 
 	"github.com/Kresqle/genuml/src/lexer"
+	"github.com/Kresqle/genuml/src/parser"
+	"github.com/sanity-io/litter"
 )
 
 func main() {
 	bytes, _ := os.ReadFile("./examples/02.lang")
 	tokens := lexer.Tokenize(string(bytes))
-
-	for _, token := range tokens {
-		token.Debug()
-	}
+	ast := parser.Parse(tokens)
+	litter.Dump(ast)
 }
