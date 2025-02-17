@@ -130,10 +130,10 @@ func skipHandler(lex *lexer, regex *regexp.Regexp) {
 
 func stringHandler(lex *lexer, regex *regexp.Regexp) {
 	match := regex.FindStringIndex(lex.remainder())
-	stringLiteral := lex.remainder()[match[0]:match[1]]
+	stringLiteral := lex.remainder()[match[0]+1 : match[1]-1]
 
 	lex.push(NewToken(STRING, stringLiteral))
-	lex.advanceN(len(stringLiteral))
+	lex.advanceN(len(stringLiteral) + 2)
 }
 
 func numberHandler(lex *lexer, regex *regexp.Regexp) {
