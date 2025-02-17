@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Kresqle/genuml/lexer"
+	"github.com/Kresqle/genuml/src/lexer"
 )
 
 func main() {
