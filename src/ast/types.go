@@ -1,13 +1,14 @@
 package ast
 
 type SymbolType struct {
-	Name string
+	Value string
 }
 
-func (t SymbolType) _type() {}
+func (t SymbolType) _type () {}
 
-type ArrayType struct {
+
+type ListType struct {
 	Underlying Type
 }
 
-func (t ArrayType) _type() {}
+func (t ListType) _type () {}

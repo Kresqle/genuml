@@ -6,10 +6,14 @@ type TokenKind int
 
 const (
 	EOF TokenKind = iota
+	NULL
+	TRUE
+	FALSE
 	NUMBER
 	STRING
 	IDENTIFIER
 
+	// Grouping & Braces
 	OPEN_BRACKET
 	CLOSE_BRACKET
 	OPEN_CURLY
@@ -17,19 +21,23 @@ const (
 	OPEN_PAREN
 	CLOSE_PAREN
 
+	// Equivilance
 	ASSIGNMENT
 	EQUALS
-	NOT
 	NOT_EQUALS
+	NOT
 
+	// Conditional
 	LESS
 	LESS_EQUALS
 	GREATER
 	GREATER_EQUALS
 
+	// Logical
 	OR
 	AND
 
+	// Symbols
 	DOT
 	DOT_DOT
 	SEMI_COLON
@@ -37,18 +45,21 @@ const (
 	QUESTION
 	COMMA
 
+	// Shorthand
 	PLUS_PLUS
 	MINUS_MINUS
 	PLUS_EQUALS
 	MINUS_EQUALS
+	NULLISH_ASSIGNMENT // ??=
 
+	//Maths
 	PLUS
 	DASH
 	SLASH
 	STAR
 	PERCENT
 
-	// Reserved keywords
+	// Reserved Keywords
 	LET
 	CONST
 	CLASS
@@ -64,11 +75,15 @@ const (
 	EXPORT
 	TYPEOF
 	IN
-	STRUCT
-	STATIC
+
+	// Misc
+	NUM_TOKENS
 )
 
 var reserved_lu map[string]TokenKind = map[string]TokenKind{
+	"true":    TRUE,
+	"false":   FALSE,
+	"null":    NULL,
 	"let":     LET,
 	"const":   CONST,
 	"class":   CLASS,
@@ -83,9 +98,7 @@ var reserved_lu map[string]TokenKind = map[string]TokenKind{
 	"for":     FOR,
 	"export":  EXPORT,
 	"typeof":  TYPEOF,
-	"in":      IN,
-	"struct":  STRUCT,
-	"static":  STATIC,
+	"in":  IN,
 }
 
 type Token struct {
@@ -93,35 +106,38 @@ type Token struct {
 	Value string
 }
 
-func (token Token) isOneOfMany(expectedTokens ...TokenKind) bool {
+func (tk Token) IsOneOfMany (expectedTokens ...TokenKind) bool {
 	for _, expected := range expectedTokens {
-		if expected == token.Kind {
+		if expected == tk.Kind {
 			return true
 		}
 	}
+
 	return false
 }
 
 func (token Token) Debug() {
-	if token.isOneOfMany(IDENTIFIER, NUMBER, STRING) {
-		fmt.Printf("%s (%s)\n", TokenKindString(token.Kind), token.Value)
+	if token.Kind == IDENTIFIER || token.Kind == NUMBER || token.Kind == STRING {
+		fmt.Printf("%s(%s)\n", TokenKindString(token.Kind), token.Value)
 	} else {
-		fmt.Printf("%s ()\n", TokenKindString(token.Kind))
+		fmt.Printf("%s()\n", TokenKindString(token.Kind))
 	}
-}
-
-func NewToken(kind TokenKind, value string) Token {
-	return Token{kind, value}
 }
 
 func TokenKindString(kind TokenKind) string {
 	switch kind {
 	case EOF:
 		return "eof"
+	case NULL:
+		return "null"
 	case NUMBER:
 		return "number"
 	case STRING:
 		return "string"
+	case TRUE:
+		return "true"
+	case FALSE:
+		return "false"
 	case IDENTIFIER:
 		return "identifier"
 	case OPEN_BRACKET:
@@ -176,6 +192,8 @@ func TokenKindString(kind TokenKind) string {
 		return "plus_equals"
 	case MINUS_EQUALS:
 		return "minus_equals"
+	case NULLISH_ASSIGNMENT:
+		return "nullish_assignment"
 	case PLUS:
 		return "plus"
 	case DASH:
@@ -192,7 +210,7 @@ func TokenKindString(kind TokenKind) string {
 		return "const"
 	case CLASS:
 		return "class"
-	case NEW:
+	case NEW:	
 		return "new"
 	case IMPORT:
 		return "import"
@@ -214,11 +232,13 @@ func TokenKindString(kind TokenKind) string {
 		return "export"
 	case IN:
 		return "in"
-	case STRUCT:
-		return "struct"
-	case STATIC:
-		return "static"
 	default:
 		return fmt.Sprintf("unknown(%d)", kind)
+	}
+}
+
+func newUniqueToken(kind TokenKind, value string) Token {
+	return Token{
+		kind, value,
 	}
 }

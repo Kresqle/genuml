@@ -4,7 +4,16 @@ type BlockStatement struct {
 	Body []Statement
 }
 
-func (n BlockStatement) stmt() {}
+func (b BlockStatement) stmt() {}
+
+type VarDeclarationStatement struct {
+	Identifier    string
+	Constant      bool
+	AssignedValue Expression
+	ExplicitType  Type
+}
+
+func (n VarDeclarationStatement) stmt() {}
 
 type ExpressionStatement struct {
 	Expression Expression
@@ -12,29 +21,47 @@ type ExpressionStatement struct {
 
 func (n ExpressionStatement) stmt() {}
 
-type VariableDeclarationStatement struct {
-	VariableName  string
-	IsConstant    bool
-	AssignedValue Expression
-	ExplicitType  Type
+type Parameter struct {
+	Name string
+	Type Type
 }
 
-func (n VariableDeclarationStatement) stmt() {}
-
-type StructProperty struct {
-	IsStatic bool // determine whether the property is static
-	Type     Type
+type FunctionDeclarationStatement struct {
+	Parameters []Parameter
+	Name       string
+	Body       []Statement
+	ReturnType Type
 }
 
-type StructMethod struct {
-	IsStatic bool // determine whether the property is static
-	Type     Type
+func (n FunctionDeclarationStatement) stmt() {}
+
+type IfStatement struct {
+	Condition  Expression
+	Consequent Statement
+	Alternate  Statement
 }
 
-type StructDeclarationStatement struct {
-	StructName string
-	Properties map[string]StructProperty
-	Methods    map[string]StructMethod
+func (n IfStatement) stmt() {}
+
+type ImportStatement struct {
+	Name string
+	From string
 }
 
-func (n StructDeclarationStatement) stmt() {}
+func (n ImportStatement) stmt() {}
+
+type ForeachStatement struct {
+	Value    string
+	Index    bool
+	Iterable Expression
+	Body     []Statement
+}
+
+func (n ForeachStatement) stmt() {}
+
+type ClassDeclarationStatement struct {
+	Name string
+	Body []Statement
+}
+
+func (n ClassDeclarationStatement) stmt() {}

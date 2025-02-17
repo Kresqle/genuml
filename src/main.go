@@ -1,16 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"time"
 
-	"github.com/Kresqle/genuml/src/lexer"
 	"github.com/Kresqle/genuml/src/parser"
 	"github.com/sanity-io/litter"
 )
 
 func main() {
-	bytes, _ := os.ReadFile("./examples/05.lang")
-	tokens := lexer.Tokenize(string(bytes))
-	ast := parser.Parse(tokens)
+	sourceBytes, _ := os.ReadFile("test.lang")
+	source := string(sourceBytes)
+	start := time.Now()
+	ast := parser.Parse(source)
+	duration := time.Since(start)
+
 	litter.Dump(ast)
+	fmt.Printf("Duration: %v\n", duration)
 }

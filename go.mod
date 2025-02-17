@@ -1,5 +1,5 @@
 module github.com/Kresqle/genuml
 
-go 1.22.2
+go 1.22.0
 
-require github.com/sanity-io/litter v1.5.8 // indirect
+require github.com/sanity-io/litter v1.5.5

@@ -1,4 +1,0 @@
-let bar = foo * 10 + (45 / 10 - -5);
-const foo: number = 10;
-bar = "Hello world";
-let baz : [][][]number;

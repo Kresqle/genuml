@@ -1,10 +1,12 @@
 package ast
 
-import "github.com/Kresqle/genuml/src/lexer"
+import (
+	"github.com/Kresqle/genuml/src/lexer"
+)
 
-// ===================
-// LITERAL EXPRESSIONS
-// ===================
+// --------------------
+// Literal Expressions
+// --------------------
 
 type NumberExpression struct {
 	Value float64
@@ -24,9 +26,9 @@ type SymbolExpression struct {
 
 func (n SymbolExpression) expr() {}
 
-// ===================
-// COMPLEX EXPRESSIONS
-// ===================
+// --------------------
+// Complex Expressions
+// --------------------
 
 type BinaryExpression struct {
 	Left     Expression
@@ -36,24 +38,64 @@ type BinaryExpression struct {
 
 func (n BinaryExpression) expr() {}
 
-type PrefixExpression struct {
-	Operator        lexer.Token
-	RightExpression Expression
-}
-
-func (n PrefixExpression) expr() {}
-
 type AssignmentExpression struct {
-	Assigne  Expression
-	Operator lexer.Token
-	Value    Expression
+	Assigne       Expression
+	AssignedValue Expression
 }
 
 func (n AssignmentExpression) expr() {}
 
-type StructInstantiation struct {
-	StructName string
-	Properties map[string]Expression
+type PrefixExpression struct {
+	Operator lexer.Token
+	Right    Expression
 }
 
-func (n StructInstantiation) expr() {}
+func (n PrefixExpression) expr() {}
+
+type MemberExpression struct {
+	Member   Expression
+	Property string
+}
+
+func (n MemberExpression) expr() {}
+
+type CallExpression struct {
+	Method    Expression
+	Arguments []Expression
+}
+
+func (n CallExpression) expr() {}
+
+type ComputedExpression struct {
+	Member   Expression
+	Property Expression
+}
+
+func (n ComputedExpression) expr() {}
+
+type RangeExpression struct {
+	Lower Expression
+	Upper Expression
+}
+
+func (n RangeExpression) expr() {}
+
+type FunctionExpression struct {
+	Parameters []Parameter
+	Body       []Statement
+	ReturnType Type
+}
+
+func (n FunctionExpression) expr() {}
+
+type ArrayLiteral struct {
+	Contents []Expression
+}
+
+func (n ArrayLiteral) expr() {}
+
+type NewExpression struct {
+	Instantiation CallExpression
+}
+
+func (n NewExpression) expr() {}

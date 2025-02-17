@@ -8,7 +8,7 @@ import (
 type binding_power int
 
 const (
-	default_bp binding_power = iota
+	defalt_bp binding_power = iota
 	comma
 	assignment
 	logical
@@ -40,16 +40,18 @@ func led(kind lexer.TokenKind, bp binding_power, led_fn led_handler) {
 	led_lu[kind] = led_fn
 }
 
-func nud(kind lexer.TokenKind, nud_fn nud_handler) {
+func nud(kind lexer.TokenKind, bp binding_power, nud_fn nud_handler) {
+	bp_lu[kind] = primary
 	nud_lu[kind] = nud_fn
 }
 
 func stmt(kind lexer.TokenKind, stmt_fn stmt_handler) {
-	bp_lu[kind] = default_bp
+	bp_lu[kind] = defalt_bp
 	stmt_lu[kind] = stmt_fn
 }
 
 func createTokenLookups() {
+	// Assignment
 	led(lexer.ASSIGNMENT, assignment, parse_assignment_expr)
 	led(lexer.PLUS_EQUALS, assignment, parse_assignment_expr)
 	led(lexer.MINUS_EQUALS, assignment, parse_assignment_expr)
@@ -57,7 +59,7 @@ func createTokenLookups() {
 	// Logical
 	led(lexer.AND, logical, parse_binary_expr)
 	led(lexer.OR, logical, parse_binary_expr)
-	led(lexer.DOT_DOT, logical, parse_binary_expr)
+	led(lexer.DOT_DOT, logical, parse_range_expr)
 
 	// Relational
 	led(lexer.LESS, relational, parse_binary_expr)
@@ -67,26 +69,47 @@ func createTokenLookups() {
 	led(lexer.EQUALS, relational, parse_binary_expr)
 	led(lexer.NOT_EQUALS, relational, parse_binary_expr)
 
-	// Additive & Multiplicative
+	// Additive & Multiplicitave
 	led(lexer.PLUS, additive, parse_binary_expr)
 	led(lexer.DASH, additive, parse_binary_expr)
-
-	led(lexer.STAR, multiplicative, parse_binary_expr)
 	led(lexer.SLASH, multiplicative, parse_binary_expr)
+	led(lexer.STAR, multiplicative, parse_binary_expr)
 	led(lexer.PERCENT, multiplicative, parse_binary_expr)
 
 	// Literals & Symbols
-	nud(lexer.NUMBER, parse_primary_expr)
-	nud(lexer.STRING, parse_primary_expr)
-	nud(lexer.IDENTIFIER, parse_primary_expr)
-	nud(lexer.OPEN_PAREN, parse_grouping_expr)
-	nud(lexer.DASH, parse_prefix_expr)
+	nud(lexer.NUMBER, primary, parse_primary_expr)
+	nud(lexer.STRING, primary, parse_primary_expr)
+	nud(lexer.IDENTIFIER, primary, parse_primary_expr)
 
-	// Call / Member expressions
-	led(lexer.OPEN_CURLY, call, parse_struct_instantiation_expr)
+	// Unary/Prefix
+	nud(lexer.TYPEOF, unary, parse_prefix_expr)
+	nud(lexer.DASH, unary, parse_prefix_expr)
+	nud(lexer.NOT, unary, parse_prefix_expr)
+	nud(lexer.OPEN_BRACKET, primary, parse_array_literal_expr)
 
-	// Statements
-	stmt(lexer.CONST, parse_var_decl_stmt)
+	// Member / Computed // Call
+	led(lexer.DOT, member, parse_member_expr)
+	led(lexer.OPEN_BRACKET, member, parse_member_expr)
+	led(lexer.OPEN_PAREN, call, parse_call_expr)
+
+	// Grouping Expression
+	nud(lexer.OPEN_PAREN, defalt_bp, parse_grouping_expr)
+	nud(lexer.FN, defalt_bp, parse_fn_expr)
+	nud(lexer.NEW, defalt_bp, func(p *parser) ast.Expression {
+		p.advance()
+		classInstantiation := parse_expr(p, defalt_bp)
+
+		return ast.NewExpression{
+			Instantiation: ast.ExpectExpression[ast.CallExpression](classInstantiation),
+		}
+	})
+
+	stmt(lexer.OPEN_CURLY, parse_block_stmt)
 	stmt(lexer.LET, parse_var_decl_stmt)
-	stmt(lexer.STRUCT, parse_struct_decl_stmt)
+	stmt(lexer.CONST, parse_var_decl_stmt)
+	stmt(lexer.FN, parse_fn_declaration)
+	stmt(lexer.IF, parse_if_stmt)
+	stmt(lexer.IMPORT, parse_import_stmt)
+	stmt(lexer.FOREACH, parse_foreach_stmt)
+	stmt(lexer.CLASS, parse_class_declaration_stmt)
 }
