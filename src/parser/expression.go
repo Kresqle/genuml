@@ -25,7 +25,7 @@ func parse_expr(p *parser, bp binding_power) ast.Expression {
 			panic(fmt.Sprintf("LED handler expected for token %s\n", lexer.TokenKindString(tokenKind)))
 		}
 
-		left = led_fn(p, left, bp)
+		left = led_fn(p, left, bp_lu[p.currentTokenKind()])
 	}
 
 	return left
