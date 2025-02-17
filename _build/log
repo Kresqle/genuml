@@ -1,6 +1,0 @@
-# dune init proj genuml
-# OCAMLPARAM: unset
-# Shared cache: enabled-except-user-rules
-# Shared cache location: /home/kamal/.cache/dune/db
-# Workspace root: /home/kamal/Documents/dev/genuml
-# Auto-detected concurrency: 16
