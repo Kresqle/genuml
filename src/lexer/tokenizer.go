@@ -81,6 +81,7 @@ func createLexer(source string) *lexer {
 		Tokens: make([]Token, 0),
 		patterns: []regexPattern{
 			// define all of our patterns
+			{regexp.MustCompile(`\s+`), skipHandler},
 			{regexp.MustCompile(`[0-9]+(\.[0-9]+)?`), numberHandler},
 
 			{regexp.MustCompile(`\[`), defaultHandler(OPEN_BRACKET, "[")},
@@ -116,6 +117,11 @@ func createLexer(source string) *lexer {
 			{regexp.MustCompile(`%`), defaultHandler(PERCENT, "%")},
 		},
 	}
+}
+
+func skipHandler(lex *lexer, regex *regexp.Regexp) {
+	match := regex.FindStringIndex(lex.remainder())
+	lex.advanceN(match[1])
 }
 
 func numberHandler(lex *lexer, regex *regexp.Regexp) {
