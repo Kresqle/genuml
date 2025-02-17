@@ -61,3 +61,24 @@ func parse_binary_expr(p *parser, left ast.Expression, bp binding_power) ast.Exp
 		Right:    right,
 	}
 }
+
+func parse_prefix_expr(p *parser) ast.Expression {
+	operatorToken := p.advance()
+	rhs := parse_expr(p, default_bp)
+
+	return ast.PrefixExpression{
+		Operator:        operatorToken,
+		RightExpression: rhs,
+	}
+}
+
+func parse_assignment_expr(p *parser, left ast.Expression, bp binding_power) ast.Expression {
+	operatorToken := p.advance()
+	rhs := parse_expr(p, bp)
+
+	return ast.AssignmentExpression{
+		Operator: operatorToken,
+		Value:    rhs,
+		Assigne:  left,
+	}
+}

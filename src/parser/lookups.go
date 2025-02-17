@@ -50,6 +50,10 @@ func stmt(kind lexer.TokenKind, stmt_fn stmt_handler) {
 }
 
 func createTokenLookups() {
+	led(lexer.ASSIGNMENT, assignment, parse_assignment_expr)
+	led(lexer.PLUS_EQUALS, assignment, parse_assignment_expr)
+	led(lexer.MINUS_EQUALS, assignment, parse_assignment_expr)
+
 	// Logical
 	led(lexer.AND, logical, parse_binary_expr)
 	led(lexer.OR, logical, parse_binary_expr)
@@ -75,6 +79,8 @@ func createTokenLookups() {
 	nud(lexer.NUMBER, parse_primary_expr)
 	nud(lexer.STRING, parse_primary_expr)
 	nud(lexer.IDENTIFIER, parse_primary_expr)
+
+	nud(lexer.DASH, parse_prefix_expr)
 
 	// Statements
 	stmt(lexer.CONST, parse_var_decl_stmt)
